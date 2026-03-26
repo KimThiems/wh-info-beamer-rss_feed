@@ -107,8 +107,10 @@ local function update_scroller_from_rss(config)
             }
         end
     else
+        -- Use default text from config or fallback
+        local default_text = config.default_text or "Loading RSS feed..."
         items[#items+1] = {
-            text = "Loading RSS feed...",
+            text = default_text,
             blink = false,
             color = config.color,
         }
@@ -139,9 +141,15 @@ local function fetch_rss(url, config)
                 update_scroller_from_rss(config)
             else
                 print("No items found in RSS feed")
+                -- Keep rss_items empty, will show default text
+                rss_items = {}
+                update_scroller_from_rss(config)
             end
         else
             print("Failed to fetch RSS feed. Status: " .. tostring(response.status))
+            -- Keep rss_items empty, will show default text
+            rss_items = {}
+            update_scroller_from_rss(config)
         end
     end)
 end

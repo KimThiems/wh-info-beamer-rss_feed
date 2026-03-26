@@ -61,5 +61,12 @@
         "type": "string",
         "default": " +++ ",
         "hint": "Text between news items"
+    }, {
+        "title": "Default Text",
+        "ui_width": 4,
+        "name": "default_text",
+        "type": "string",
+        "default": "RSS feed not available",
+        "hint": "Text to display when RSS feed cannot be loaded"
     }]
 }
