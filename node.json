@@ -1,43 +1,9 @@
 {
-    "name": "Plugin: RSS Feed Scroller",
-    "options": [{
-        "title": "Scroller",
-        "type": "section"
-    }, {
-        "title": "Font",
-        "ui_width": 4,
-        "name": "font",
-        "type": "font",
-        "doc_link": true,
-        "default": "default-font.ttf"
-    }, {
-        "title": "Size",
-        "ui_width": 2,
-        "type": "integer",
-        "name": "size",
-        "default": 40
-    }, {
-        "title": "Font Color",
-        "ui_width": 2,
-        "type": "color",
-        "name": "color",
-        "default": [1,1,1,1]
-    }, {
-        "title": "Scroll Speed",
-        "ui_width": 4,
-        "name": "speed",
-        "type": "select",
-        "options": [
-            [ 30, "Slow"],
-            [ 60, "Normal"],
-            [120, "Fast"],
-            [180, "Faster"],
-            [240, "Even faster"]
-        ],
-        "default": 120
+    "name": "RSS Feed Scroller",
+    "permissions": {
+        "network": "Fetches RSS feed"
     },
-
-    {
+    "options": [{
         "title": "RSS Feed",
         "type": "section"
     }, {
@@ -48,7 +14,7 @@
         "default": "https://www.tagesschau.de/infoservices/alle-meldungen-100~rss2.xml",
         "hint": "URL of the RSS feed to display"
     }, {
-        "title": "Update Interval",
+        "title": "Update Interval (seconds)",
         "ui_width": 4,
         "name": "update_interval",
         "type": "integer",
@@ -68,5 +34,54 @@
         "type": "string",
         "default": "RSS feed not available",
         "hint": "Text to display when RSS feed cannot be loaded"
+    },
+
+    {
+        "title": "Display Settings",
+        "type": "section"
+    }, {
+        "title": "Size",
+        "ui_width": 2,
+        "type": "integer",
+        "name": "size",
+        "default": 40,
+        "hint": "Font size in pixels"
+    }, {
+        "title": "Font Color",
+        "ui_width": 2,
+        "type": "color",
+        "name": "color",
+        "default": [1,1,1,1]
+    }, {
+        "title": "Scroll Speed",
+        "ui_width": 4,
+        "name": "speed",
+        "type": "select",
+        "options": [
+            [ 30, "Slow"],
+            [ 60, "Normal"],
+            [120, "Fast"],
+            [180, "Faster"],
+            [240, "Even faster"]
+        ],
+        "default": 120
+    }, {
+        "title": "Ticker Height",
+        "ui_width": 4,
+        "name": "ticker_height",
+        "type": "integer",
+        "default": 80,
+        "hint": "Height of ticker bar in pixels"
+    }, {
+        "title": "Position",
+        "ui_width": 4,
+        "name": "position",
+        "type": "select",
+        "options": [
+            ["bottom", "Bottom"],
+            ["top", "Top"]
+        ],
+        "default": "bottom",
+        "hint": "Position of ticker on screen"
     }]
 }

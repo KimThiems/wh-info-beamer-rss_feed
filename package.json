@@ -1,17 +1,13 @@
 {
-    "name": "Plugin: RSS Feed",
+    "name": "RSS Feed Scroller",
     "author": "Kim Thiems <kim.thiems@w-hs.de>",
     "desc": "Displays a horizontal text scroller from RSS feed",
     "repository": "https://github.com/KimThiems/wh-info-beamer-rss_feed",
     "platforms": ["pi/v7", "pi/epoch-2"],
     "lifecycle": "beta",
-    "version": "1.1.4",
+    "version": "1.2.0",
     "offline": {
         "support": "no",
         "info": "Does require an internet connection"
     },
-    "nesting": {
-        "parents": ["hdv2-player-plugin"],
-        "childs": []
-    }
 }
