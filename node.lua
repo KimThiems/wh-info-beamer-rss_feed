@@ -172,7 +172,7 @@ function node.render()
     local ticker_y = HEIGHT - ticker_height
 
     -- Draw background bar
-    gl.clear(bg_color.r/255, bg_color.g/255, bg_color.b/255, bg_alpha)
+    -- gl.clear(bg_color.r/255, bg_color.g/255, bg_color.b/255, bg_alpha)
 
     -- Render only the ticker area
     gl.pushMatrix()
