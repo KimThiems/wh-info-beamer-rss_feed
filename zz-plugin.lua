@@ -7,7 +7,7 @@ local active_scroller
 local last_update = 0
 local update_interval = 300
 local rss_items = {}
-local http = require "http"
+local http
 
 -- Helper function to decode HTML entities
 local function decode_html_entities(text)
@@ -58,6 +58,11 @@ local function Scroller(items, font, speed)
     end
 
     local function draw(now, y, x1, x2)
+        -- Handle empty scroller
+        if total_w == 0 or #items == 0 then
+            return
+        end
+
         local x = math.floor(x1 + (now * -speed) % total_w - total_w)
         local idx = 1
 
@@ -94,6 +99,7 @@ local function update_scroller_from_rss(config)
     local items = {}
 
     if #rss_items > 0 then
+        print("Building scroller with " .. #rss_items .. " RSS items")
         for _, rss_item in ipairs(rss_items) do
             items[#items+1] = {
                 text = rss_item.title,
@@ -109,6 +115,7 @@ local function update_scroller_from_rss(config)
     else
         -- Use default text from config or fallback
         local default_text = config.default_text or "Loading RSS feed..."
+        print("No RSS items, using default text: " .. default_text)
         items[#items+1] = {
             text = default_text,
             blink = false,
@@ -117,6 +124,7 @@ local function update_scroller_from_rss(config)
     end
 
     size = config.size
+    print("Loading font: " .. tostring(config.font.asset_name))
     local font = resource.load_font(api.localized(
         config.font.asset_name
     ))
@@ -126,9 +134,21 @@ local function update_scroller_from_rss(config)
     active_scroller = Scroller(
         items, font, config.speed
     )
+    print("Scroller updated with " .. #items .. " items")
 end
 
 local function fetch_rss(url, config)
+    -- Lazy load http module
+    if not http then
+        local success, result = pcall(function() return require "http" end)
+        if success then
+            http = result
+        else
+            print("HTTP module not available: " .. tostring(result))
+            return
+        end
+    end
+
     print("Fetching RSS feed from: " .. url)
 
     http.get(url, function(response)
@@ -157,6 +177,11 @@ end
 local current_config = nil
 
 function M.updated_config_json(config)
+    print("=== RSS Scroller: Config update received ===")
+    print("RSS URL: " .. tostring(config.rss_url))
+    print("Size: " .. tostring(config.size))
+    print("Speed: " .. tostring(config.speed))
+
     current_config = config
     update_interval = config.update_interval or 300
 
@@ -170,7 +195,7 @@ function M.updated_config_json(config)
         last_update = now
     end
 
-    print("configured RSS scroller")
+    print("=== RSS Scroller: Configuration complete ===")
 end
 
 local function instance(ctx)
