@@ -97,5 +97,27 @@
         "type": "string",
         "default": " +++ ",
         "hint": "Text between news items"
+    }, {
+        "title": "Position",
+        "ui_width": 6,
+        "name": "position",
+        "type": "select",
+        "options": [
+            ["bottom", "Bottom"],
+            ["top", "Top"]
+        ],
+        "default": "bottom",
+        "hint": "Position of ticker on screen"
+    }, {
+        "title": "Overlap Mode",
+        "ui_width": 6,
+        "name": "overlap",
+        "type": "select",
+        "options": [
+            ["overlay", "Overlay (on top of content)"],
+            ["cut", "Cut (reserve space)"]
+        ],
+        "default": "overlay",
+        "hint": "Whether ticker overlays content or reserves screen space"
     }]
 }

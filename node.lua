@@ -13,12 +13,14 @@ local text_color = {r=255, g=255, b=255}
 local ticker_height = 80
 local update_interval = 300
 local separator = " +++ "
+local position = "bottom"
+local overlap = "overlay"
 
 -- State variables
 local news_items = {}
-local ticker_text = ""
+local ticker_text = "Loading RSS feed..."
 local scroll_offset = 0
-local last_update = 0
+local last_update = -999999  -- Force immediate update on startup
 local font
 
 -- Helper function to decode HTML entities
@@ -147,6 +149,12 @@ util.data_mapper{
             ticker_text = ticker_text .. separator .. ticker_text
         end
     end,
+    position = function(val)
+        position = val
+    end,
+    overlap = function(val)
+        overlap = val
+    end,
 }
 
 -- Initialize
@@ -163,18 +171,15 @@ function node.render()
         last_update = now
     end
 
-    -- Only render if we have content
-    if ticker_text == "" or #ticker_text == 0 then
-        return
+    -- Calculate ticker position based on configuration
+    local ticker_y
+    if position == "top" then
+        ticker_y = 0
+    else
+        ticker_y = HEIGHT - ticker_height
     end
 
-    -- Calculate ticker position (bottom of screen)
-    local ticker_y = HEIGHT - ticker_height
-
-    -- Draw background bar
-    -- gl.clear(bg_color.r/255, bg_color.g/255, bg_color.b/255, bg_alpha)
-
-    -- Render only the ticker area
+    -- Render ticker at configured position
     gl.pushMatrix()
     gl.translate(0, ticker_y)
 
@@ -183,8 +188,14 @@ function node.render()
         bg_color.r/255, bg_color.g/255, bg_color.b/255, bg_alpha
     ):draw(0, 0, WIDTH, ticker_height)
 
+    -- Ensure we have text to display
+    local display_text = ticker_text
+    if display_text == "" or #display_text == 0 then
+        display_text = "Waiting for RSS feed..."
+    end
+
     -- Calculate text width
-    local text_width = font:width(ticker_text)
+    local text_width = font:width(display_text)
 
     -- Update scroll position
     scroll_offset = scroll_offset + scroll_speed * (sys.now() - (sys.now() - sys.frame_duration()))
@@ -196,7 +207,7 @@ function node.render()
 
     -- Draw scrolling text
     local x_pos = WIDTH - scroll_offset
-    font:write(x_pos, (ticker_height - text_size) / 2, ticker_text,
+    font:write(x_pos, (ticker_height - text_size) / 2, display_text,
                text_size, text_color.r/255, text_color.g/255, text_color.b/255, 1)
 
     gl.popMatrix()
