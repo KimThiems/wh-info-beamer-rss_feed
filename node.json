@@ -1,0 +1,101 @@
+{
+    "name": "Tagesschau News Ticker",
+    "author": "info-beamer",
+    "version": "1.0",
+    "description": "Displays Tagesschau RSS feed as a horizontal text scroller",
+    "permissions": {
+        "network": "Fetches RSS feed from tagesschau.de"
+    },
+    "options": [{
+        "title": "RSS Feed URL",
+        "ui_width": 12,
+        "name": "rss_url",
+        "type": "string",
+        "default": "https://www.tagesschau.de/infoservices/alle-meldungen-100~rss2.xml",
+        "hint": "URL of the RSS feed to display"
+    }, {
+        "title": "Scroll Speed",
+        "ui_width": 6,
+        "name": "scroll_speed",
+        "type": "integer",
+        "default": 100,
+        "hint": "Pixels per second"
+    }, {
+        "title": "Text Size",
+        "ui_width": 6,
+        "name": "text_size",
+        "type": "integer",
+        "default": 40,
+        "hint": "Font size in pixels"
+    }, {
+        "title": "Background Color",
+        "ui_width": 6,
+        "name": "bg_color_r",
+        "type": "integer",
+        "default": 0,
+        "hint": "Red (0-255)"
+    }, {
+        "title": "Background Color",
+        "ui_width": 6,
+        "name": "bg_color_g",
+        "type": "integer",
+        "default": 0,
+        "hint": "Green (0-255)"
+    }, {
+        "title": "Background Color",
+        "ui_width": 6,
+        "name": "bg_color_b",
+        "type": "integer",
+        "default": 0,
+        "hint": "Blue (0-255)"
+    }, {
+        "title": "Background Alpha",
+        "ui_width": 6,
+        "name": "bg_alpha",
+        "type": "float",
+        "default": 0.8,
+        "hint": "0.0 (transparent) to 1.0 (opaque)"
+    }, {
+        "title": "Text Color",
+        "ui_width": 6,
+        "name": "text_color_r",
+        "type": "integer",
+        "default": 255,
+        "hint": "Red (0-255)"
+    }, {
+        "title": "Text Color",
+        "ui_width": 6,
+        "name": "text_color_g",
+        "type": "integer",
+        "default": 255,
+        "hint": "Green (0-255)"
+    }, {
+        "title": "Text Color",
+        "ui_width": 6,
+        "name": "text_color_b",
+        "type": "integer",
+        "default": 255,
+        "hint": "Blue (0-255)"
+    }, {
+        "title": "Ticker Height",
+        "ui_width": 6,
+        "name": "ticker_height",
+        "type": "integer",
+        "default": 80,
+        "hint": "Height of ticker bar in pixels"
+    }, {
+        "title": "Update Interval",
+        "ui_width": 6,
+        "name": "update_interval",
+        "type": "integer",
+        "default": 300,
+        "hint": "Seconds between RSS feed updates"
+    }, {
+        "title": "Separator",
+        "ui_width": 6,
+        "name": "separator",
+        "type": "string",
+        "default": " +++ ",
+        "hint": "Text between news items"
+    }]
+}
