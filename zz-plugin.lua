@@ -26,28 +26,73 @@ end
 local function parse_rss(xml_content)
     local items = {}
 
-    -- Extract all <item> blocks
-    for item_block in xml_content:gmatch("<item>(.-)</item>") do
-        local title = item_block:match("<title><!%[CDATA%[(.-)%]%]></title>") or
-                     item_block:match("<title>(.-)</title>") or ""
-        local description = item_block:match("<description><!%[CDATA%[(.-)%]%]></description>") or
-                           item_block:match("<description>(.-)</description>") or ""
+    print("=== Starting RSS parsing ===")
 
-        -- Strip HTML tags from description
-        description = description:gsub("<[^>]+>", "")
+    -- Count how many <item> blocks we find (case insensitive)
+    local item_count = 0
+    for item_block in xml_content:gmatch("<[Ii][Tt][Ee][Mm]>(.-)</[Ii][Tt][Ee][Mm]>") do
+        item_count = item_count + 1
+    end
+    print("Found " .. item_count .. " <item> blocks in RSS feed")
 
-        -- Decode HTML entities
-        title = decode_html_entities(title)
-        description = decode_html_entities(description)
+    -- Try multiple patterns to extract item blocks
+    local patterns = {
+        "<item>(.-)</item>",           -- Standard lowercase
+        "<item%s+[^>]*>(.-)</item>",   -- With attributes
+        "<Item>(.-)</Item>",           -- Capitalized
+    }
 
-        if title ~= "" then
-            table.insert(items, {
-                title = title,
-                description = description
-            })
+    for _, pattern in ipairs(patterns) do
+        for item_block in xml_content:gmatch(pattern) do
+            -- Try multiple title patterns
+            local title = item_block:match("<title><!%[CDATA%[(.-)%]%]></title>") or
+                         item_block:match("<title[^>]*><!%[CDATA%[(.-)%]%]></title>") or
+                         item_block:match("<title>(.-)</title>") or
+                         item_block:match("<title[^>]*>(.-)</title>") or ""
+
+            local description = item_block:match("<description><!%[CDATA%[(.-)%]%]></description>") or
+                               item_block:match("<description[^>]*><!%[CDATA%[(.-)%]%]></description>") or
+                               item_block:match("<description>(.-)</description>") or
+                               item_block:match("<description[^>]*>(.-)</description>") or ""
+
+            if title == "" then
+                print("WARNING: Empty title found in item block")
+                print("Item block preview (first 300 chars): " .. item_block:sub(1, 300))
+            end
+
+            -- Strip HTML tags from description
+            description = description:gsub("<[^>]+>", "")
+
+            -- Decode HTML entities
+            title = decode_html_entities(title)
+            description = decode_html_entities(description)
+
+            if title ~= "" then
+                -- Avoid duplicates
+                local is_duplicate = false
+                for _, existing in ipairs(items) do
+                    if existing.title == title then
+                        is_duplicate = true
+                        break
+                    end
+                end
+
+                if not is_duplicate then
+                    table.insert(items, {
+                        title = title,
+                        description = description
+                    })
+                end
+            end
+        end
+
+        -- If we found items, don't try other patterns
+        if #items > 0 then
+            break
         end
     end
 
+    print("=== RSS parsing complete: " .. #items .. " items extracted ===")
     return items
 end
 
@@ -143,30 +188,40 @@ local function fetch_rss(url, config)
         local success, result = pcall(function() return require "http" end)
         if success then
             http = result
+            print("HTTP module loaded successfully")
         else
             print("HTTP module not available: " .. tostring(result))
             return
         end
     end
 
-    print("Fetching RSS feed from: " .. url)
+    print("=== Fetching RSS feed from: " .. url .. " ===")
 
     http.get(url, function(response)
+        print("HTTP Response received. Status: " .. tostring(response.status))
+
         if response.status == 200 then
+            print("Response body length: " .. tostring(#response.body))
+            print("Response body preview (first 500 chars): " .. tostring(response.body:sub(1, 500)))
+
             local items = parse_rss(response.body)
 
             if #items > 0 then
                 rss_items = items
-                print("Loaded " .. #rss_items .. " RSS items")
+                print("=== Successfully loaded " .. #rss_items .. " RSS items ===")
+                for i, item in ipairs(rss_items) do
+                    print("  Item " .. i .. ": " .. item.title)
+                    if i >= 3 then break end -- Only print first 3
+                end
                 update_scroller_from_rss(config)
             else
-                print("No items found in RSS feed")
+                print("=== WARNING: No items found in RSS feed ===")
                 -- Keep rss_items empty, will show default text
                 rss_items = {}
                 update_scroller_from_rss(config)
             end
         else
-            print("Failed to fetch RSS feed. Status: " .. tostring(response.status))
+            print("=== ERROR: Failed to fetch RSS feed. Status: " .. tostring(response.status) .. " ===")
             -- Keep rss_items empty, will show default text
             rss_items = {}
             update_scroller_from_rss(config)
