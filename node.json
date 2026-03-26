@@ -9,7 +9,7 @@
         "name": "font",
         "type": "font",
         "doc_link": true,
-        "default": "silkscreen.ttf"
+        "default": "default-font.ttf"
     }, {
         "title": "Size",
         "ui_width": 2,
