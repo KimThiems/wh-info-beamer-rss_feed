@@ -8,6 +8,7 @@ local last_update = 0
 local update_interval = 300
 local rss_items = {}
 local http
+local debug_status = "Plugin loaded"
 
 -- Helper function to decode HTML entities
 local function decode_html_entities(text)
@@ -158,11 +159,11 @@ local function update_scroller_from_rss(config)
             }
         end
     else
-        -- Use default text from config or fallback
+        -- Use default text from config or fallback with debug info
         local default_text = config.default_text or "Loading RSS feed..."
         print("No RSS items, using default text: " .. default_text)
         items[#items+1] = {
-            text = default_text,
+            text = default_text .. " [DEBUG: " .. debug_status .. "]",
             blink = false,
             color = config.color,
         }
@@ -189,22 +190,28 @@ local function fetch_rss(url, config)
         if success then
             http = result
             print("HTTP module loaded successfully")
+            debug_status = "HTTP module loaded"
         else
             print("HTTP module not available: " .. tostring(result))
+            debug_status = "HTTP module FAILED: " .. tostring(result)
+            update_scroller_from_rss(config)
             return
         end
     end
 
     print("=== Fetching RSS feed from: " .. url .. " ===")
+    debug_status = "Fetching RSS..."
 
     http.get(url, function(response)
         print("HTTP Response received. Status: " .. tostring(response.status))
+        debug_status = "HTTP Status: " .. tostring(response.status)
 
         if response.status == 200 then
             print("Response body length: " .. tostring(#response.body))
             print("Response body preview (first 500 chars): " .. tostring(response.body:sub(1, 500)))
 
             local items = parse_rss(response.body)
+            debug_status = "Parsed " .. #items .. " items"
 
             if #items > 0 then
                 rss_items = items
@@ -216,12 +223,14 @@ local function fetch_rss(url, config)
                 update_scroller_from_rss(config)
             else
                 print("=== WARNING: No items found in RSS feed ===")
+                debug_status = "No items parsed from feed"
                 -- Keep rss_items empty, will show default text
                 rss_items = {}
                 update_scroller_from_rss(config)
             end
         else
             print("=== ERROR: Failed to fetch RSS feed. Status: " .. tostring(response.status) .. " ===")
+            debug_status = "HTTP ERROR: " .. tostring(response.status)
             -- Keep rss_items empty, will show default text
             rss_items = {}
             update_scroller_from_rss(config)
@@ -236,6 +245,8 @@ function M.updated_config_json(config)
     print("RSS URL: " .. tostring(config.rss_url))
     print("Size: " .. tostring(config.size))
     print("Speed: " .. tostring(config.speed))
+
+    debug_status = "Config loaded, URL: " .. tostring(config.rss_url)
 
     current_config = config
     update_interval = config.update_interval or 300
