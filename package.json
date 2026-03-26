@@ -5,7 +5,7 @@
     "repository": "https://github.com/KimThiems/wh-info-beamer-rss_feed",
     "platforms": ["pi/v7", "pi/epoch-2"],
     "lifecycle": "beta",
-    "version": "1.1.3",
+    "version": "1.1.4",
     "offline": {
         "support": "no",
         "info": "Does require an internet connection"
