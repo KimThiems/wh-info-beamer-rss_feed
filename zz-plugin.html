@@ -1,0 +1,37 @@
+<html>
+  <body>
+    <div class='row'>
+      <div class='col-xs-6'>
+        <select class='form-control' id='pos'>
+          <option value='bottom'>Place at bottom</option>
+          <option value='top'>Place at the top</option>
+        </select>
+      </div>
+      <div class='col-xs-6'>
+        <select class='form-control' id='overlap'>
+          <option value='overlap'>Overlap content</option>
+          <option value='reserve'>Reserve space</option>
+        </select>
+      </div>
+    </div>
+    <div id='bottom'></div>
+    <script src='hosted.js'></script>
+    <script>
+      let pos = document.getElementById('pos'),
+          overlap = document.getElementById('overlap')
+      ib.setDefaultStyle()
+      ib.onConfigUpdate(config => {
+        pos.value = config.pos || 'bottom'
+        overlap.value = config.overlap || 'overlap'
+      })
+      const change = () => {
+        ib.set_config({
+          pos: pos.value,
+          overlap: overlap.value,
+        })
+      }
+      pos.addEventListener("change", change)
+      overlap.addEventListener("change", change)
+    </script>
+  </body>
+</html>

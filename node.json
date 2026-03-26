@@ -1,51 +1,21 @@
 {
-    "name": "RSS Feed Scroller",
-    "permissions": {
-        "network": "Fetches RSS feed"
-    },
+    "name": "Plugin: RSS Feed Scroller",
     "options": [{
-        "title": "RSS Feed",
+        "title": "Scroller",
         "type": "section"
     }, {
-        "title": "RSS Feed URL",
-        "ui_width": 12,
-        "name": "rss_url",
-        "type": "string",
-        "default": "https://www.tagesschau.de/infoservices/alle-meldungen-100~rss2.xml",
-        "hint": "URL of the RSS feed to display"
-    }, {
-        "title": "Update Interval (seconds)",
+        "title": "Font",
         "ui_width": 4,
-        "name": "update_interval",
-        "type": "integer",
-        "default": 300,
-        "hint": "Seconds between RSS feed updates"
-    }, {
-        "title": "Separator",
-        "ui_width": 4,
-        "name": "separator",
-        "type": "string",
-        "default": " +++ ",
-        "hint": "Text between news items"
-    }, {
-        "title": "Default Text",
-        "ui_width": 4,
-        "name": "default_text",
-        "type": "string",
-        "default": "RSS feed not available",
-        "hint": "Text to display when RSS feed cannot be loaded"
-    },
-
-    {
-        "title": "Display Settings",
-        "type": "section"
+        "name": "font",
+        "type": "font",
+        "doc_link": true,
+        "default": "default-font.ttf"
     }, {
         "title": "Size",
         "ui_width": 2,
         "type": "integer",
         "name": "size",
-        "default": 40,
-        "hint": "Font size in pixels"
+        "default": 40
     }, {
         "title": "Font Color",
         "ui_width": 2,
@@ -65,23 +35,38 @@
             [240, "Even faster"]
         ],
         "default": 120
+    },
+
+    {
+        "title": "RSS Feed",
+        "type": "section"
     }, {
-        "title": "Ticker Height",
+        "title": "RSS Feed URL",
+        "ui_width": 12,
+        "name": "rss_url",
+        "type": "string",
+        "default": "https://www.tagesschau.de/infoservices/alle-meldungen-100~rss2.xml",
+        "hint": "URL of the RSS feed to display"
+    }, {
+        "title": "Update Interval",
         "ui_width": 4,
-        "name": "ticker_height",
+        "name": "update_interval",
         "type": "integer",
-        "default": 80,
-        "hint": "Height of ticker bar in pixels"
+        "default": 300,
+        "hint": "Seconds between RSS feed updates"
     }, {
-        "title": "Position",
+        "title": "Separator",
         "ui_width": 4,
-        "name": "position",
-        "type": "select",
-        "options": [
-            ["bottom", "Bottom"],
-            ["top", "Top"]
-        ],
-        "default": "bottom",
-        "hint": "Position of ticker on screen"
+        "name": "separator",
+        "type": "string",
+        "default": " +++ ",
+        "hint": "Text between news items"
+    }, {
+        "title": "Default Text",
+        "ui_width": 4,
+        "name": "default_text",
+        "type": "string",
+        "default": "RSS feed not available",
+        "hint": "Text to display when RSS feed cannot be loaded"
     }]
 }
